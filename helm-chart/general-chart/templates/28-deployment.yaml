@@ -17,6 +17,9 @@ spec:
       annotations:
         rollme: {{ dateInZone "2006-01-02 15:04:05" now  "UTC" | quote }}
     spec:
+      {{- if .Values.serviceAccountRoleArn }}
+      serviceAccountName: {{ .Release.Name }}-sa
+      {{- end}}
       volumes:
       {{- range $i, $val := list }}
 
@@ -44,6 +47,9 @@ spec:
             - name: {{ $port.name }}
               containerPort: {{ $port.port }}
             {{- end }}
+          {{- if .Values.container.probe }}
+            {{ toYaml .Values.container.probe | nindent 10 }}
+          {{- end }}
           envFrom:
             {{- range $configmaps := .Values.configmap }}
               {{- with (coalesce $configmaps.key) }}

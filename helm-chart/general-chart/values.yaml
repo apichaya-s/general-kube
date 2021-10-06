@@ -1,4 +1,5 @@
 service: false
+serviceAccountRoleArn:
 replicas: 2
 minAvailable: 1
 horizontalScaler:
@@ -43,6 +44,22 @@ container:
     # - name: app
     #   path: /
     #   port: 444
+  probe:
+    {}
+    # livenessProbe:
+    #   httpGet:
+    #     path: /health
+    #     port: health
+    #     scheme: HTTP
+    #   initialDelaySeconds: 5
+    #   timeoutSeconds: 5
+    # readinessProbe:
+    #   httpGet:
+    #     path: /
+    #     port: app
+    #     scheme: HTTP
+    #   initialDelaySeconds: 5
+    #   timeoutSeconds: 5
 
 ## ingress
 ingress:
