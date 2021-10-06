@@ -1,0 +1,12 @@
+{{- if ge (int .Values.replicas) 2 }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-pdb
+  namespace: {{ .Release.Namespace }}
+spec:
+  minAvailable: {{ .Values.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app }}
+{{- end }}

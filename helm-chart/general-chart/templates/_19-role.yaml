@@ -1,0 +1,70 @@
+## namespace deployer role
+# namespaceRbac:
+#   deployer:
+#     role: updater # updater|reader
+#     kind: User
+#     name: goagent-user
+
+{{- if .Values.namespaceRbac -}}
+  {{- $roles := .Values.namespaceRbac }}
+  {{- range $roleName, $role := $roles -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $roleName }}-role
+  namespace: {{ $.Release.Namespace }}
+rules:
+  {{- if eq $role.role "updater" -}}
+  - apiGroups:
+    - ""
+    - extensions
+    - apps
+    - policy
+    resources:
+    - pods
+    - deployments
+    - services
+    - secrets
+    - configmaps
+    - events
+    - ingresses
+    - statefulsets
+    - poddisruptionbudgets
+    verbs:
+    - list
+    - get
+    - watch
+    - update
+    - create
+    - patch
+  {{- end -}}
+  - apiGroups:
+    - ""
+    - extensions
+    - apps
+    - policy
+    resources:
+    - pods
+    - deployments
+    - services
+    - secrets
+    - configmaps
+    - events
+    - ingresses
+    - statefulsets
+    - poddisruptionbudgets
+    verbs:
+    - list
+    - get
+    - watch
+  - apiGroups:
+    - rbac.authorization.k8s.io
+    resources:
+    - roles
+    - rolebindings
+    verbs:
+    - list
+    - get
+    - watch
+  {{- end -}}
+{{- end -}}

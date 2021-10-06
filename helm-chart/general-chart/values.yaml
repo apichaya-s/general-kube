@@ -1,0 +1,55 @@
+service: false
+replicas: 2
+minAvailable: 1
+horizontalScaler:
+  {}
+  # minReplicas:
+  # maxReplicas:
+  # cpuTarget:
+  # memoryTarget:
+
+configmap:
+  # - name: "configmap-file"
+  #   mount:
+  #     - localPath: "."
+  #       mountPath: "."
+  #       subPath: []
+  # - name: configmap-key
+  #   key:
+  #     "key": "value"
+
+secret:
+  []
+  # - name: "secret-file"
+  #   mount:
+  #     - localPath: ""
+  #       mountPath: ""
+  #       subPath: []
+  # - name: secret-key
+  #   key:
+  #     "key": "value"
+
+## container
+container:
+  image:
+  version:
+  pullPolicy: Always
+  cpuRequest: 0.2
+  memRequest: 0.5Gi
+  cpuLimit: 1
+  memLimit: 2Gi
+  port:
+    []
+    # - name: app
+    #   path: /
+    #   port: 444
+
+## ingress
+ingress:
+  {}
+  # certificationArn:
+  # scheme: # internal | internet-facing
+  # cidrs: []
+  # healthCheckPath:
+  # accessLogBucket:
+  # host:

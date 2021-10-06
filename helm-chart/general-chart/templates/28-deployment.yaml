@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deploy
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- if not .Values.horizontalScaler }}
+  replicas: {{ .Values.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+      annotations:
+        rollme: {{ dateInZone "2006-01-02 15:04:05" now  "UTC" | quote }}
+    spec:
+      volumes:
+      {{- range $i, $val := list }}
+
+      {{ end -}}
+        {{- range $configmaps := .Values.configmap }}
+          {{- with (coalesce $configmaps.mount) }}
+        - name: {{ tpl $configmaps.name $ }}-vol
+          configMap:
+            name: {{ tpl $configmaps.name $ }}
+          {{- end }}
+        {{- end }}
+        {{- range $secret := .Values.secret }}
+          {{- with (coalesce $secret.mount) }}
+        - name: {{ tpl $secret.name $ }}-vol
+          secret:
+            secretName: {{ tpl $secret.name $ }}
+          {{- end }}
+        {{- end }}
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.container.image }}:{{ .Values.container.version }}
+          imagePullPolicy: {{ .Values.container.pullPolicy }}
+          ports:
+            {{- range $port := .Values.container.port }}
+            - name: {{ $port.name }}
+              containerPort: {{ $port.port }}
+            {{- end }}
+          envFrom:
+            {{- range $configmaps := .Values.configmap }}
+              {{- with (coalesce $configmaps.key) }}
+            - configMapRef:
+                name: {{ tpl $configmaps.name $ }}
+              {{- end }}
+            {{- end }}
+            {{- range $secret := .Values.secret }}
+              {{- with (coalesce $secret.key) }}
+            - secretRef:
+                name: {{ tpl $secret.name $ }}
+              {{- end }}
+            {{- end }}
+          volumeMounts:
+          {{- range $configmaps := .Values.configmap }}
+            {{- range $mount := $configmaps.mount }}
+            {{- if hasKey $mount "subPath" }}
+              {{- range $mount.subPath }} {{- $subPath := (tpl . $) }}
+            - name: {{ tpl $configmaps.name $ }}-vol
+              mountPath: {{ $mount.mountPath }}{{ $subPath }}
+              subPath: {{ $subPath }}
+              readOnly: true
+              {{- end }}
+            {{- else }}
+            - name: {{ tpl $configmaps.name $ }}-vol
+              mountPath: {{ $mount.mountPath }}
+              readOnly: true
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- range $secret := .Values.secret }}
+            {{- range $mount := $secret.mount }}
+            {{- if hasKey $mount "subPath" }}
+              {{- range $mount.subPath }} {{- $subPath := (tpl . $) }}
+            - name: {{ tpl $secret.name $ }}-vol
+              mountPath: {{ $mount.mountPath }}{{ $subPath }}
+              subPath: {{ $subPath }}
+              readOnly: true
+              {{- end }}
+            {{- else }}
+            - name: {{ tpl $secret.name $ }}-vol
+              mountPath: {{ $mount.mountPath }}
+              readOnly: true
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          resources:
+            requests:
+              cpu: {{ .Values.container.cpuRequest }}
+              memory: {{ .Values.container.memRequest }}
+            limits:
+              cpu: {{ .Values.container.cpuLimit }}
+              memory: {{ .Values.container.memLimit }}

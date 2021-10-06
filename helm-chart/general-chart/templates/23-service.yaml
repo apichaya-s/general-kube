@@ -1,0 +1,24 @@
+{{- if .Values.service }}
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '8100'
+    prometheus.io/path: '/actuator/prometheus'
+  name: {{ .Release.Name }}-svc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+spec:
+  ports:
+    {{- range $port := .Values.container.port }}
+    - name: {{ $port.name }}
+      port: {{ int $port.port }}
+      targetPort: {{ int $port.port }}
+    {{- end }}
+  selector:
+    app: {{ .Release.Name }}
+  type: NodePort
+{{- end }}
