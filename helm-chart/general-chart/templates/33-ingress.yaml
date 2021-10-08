@@ -9,6 +9,7 @@ metadata:
     {{- end}}
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.scheme }}
+    alb.ingress.kubernetes.io/group.name: {{ .Release.Namespace }}
     kubernetes.io/ingress.class: alb
     {{- if .Values.ingress.cidrs }}
     alb.ingress.kubernetes.io/inbound-cidrs: {{ (join "," .Values.ingress.cidrs ) }}
@@ -38,7 +39,7 @@ spec:
             port:
               name: use-annotation
       {{- range $port := .Values.container.port }}
-      - path: {{ $port.path }}
+      - path: {{ tpl $port.path $ }}
         pathType: Prefix
         backend:
           service:
