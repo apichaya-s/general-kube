@@ -7,3 +7,5 @@
 - helm 3 (brew install helm)
 - jq (brew install jq)
 - Install realpath for mac (brew install coreutils)
+- [optional] Lens (brew install --cask lens)
+- [optinal] kubectx (brew install kubectx)

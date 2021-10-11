@@ -25,3 +25,11 @@ container:
         scheme: HTTP
       initialDelaySeconds: 5
       timeoutSeconds: 5
+configmap:
+  - name: nginx-configmap
+    key:
+      "key": "value"
+secret:
+  - name: nginx-secret
+    key:
+      "key": "dmFsdWUK" # echo "value" |base64
