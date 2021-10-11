@@ -1,4 +1,10 @@
 service: true
+horizontalScaler:
+  minReplicas: 1
+  maxReplicas: 3
+  cpuTarget: 50
+  memoryTarget: 50
+
 container:
   image: nginx
   version:
