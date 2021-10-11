@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-deploy
   namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
 spec:
   {{- if not .Values.horizontalScaler }}
   replicas: {{ .Values.replicas }}

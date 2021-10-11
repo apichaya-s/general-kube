@@ -1,0 +1,21 @@
+service: true
+container:
+  image: nginx
+  version:
+  pullPolicy: Always
+  cpuRequest: 0.2
+  memRequest: 0.5Gi
+  cpuLimit: 1
+  memLimit: 2Gi
+  port:
+    - name: app
+      path: /
+      port: 80
+  probe:
+    livenessProbe:
+      httpGet:
+        path: /
+        port: app
+        scheme: HTTP
+      initialDelaySeconds: 5
+      timeoutSeconds: 5

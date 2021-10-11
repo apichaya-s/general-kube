@@ -20,7 +20,7 @@ metadata:
     {{- if .Values.ingress.accessLogBucket }}
     alb.ingress.kubernetes.io/load-balancer-attributes: >-
       access_logs.s3.enabled=true,
-      access_logs.s3.bucket=cg-{{ tpl .Values.ingress.accessLogBucket . }}
+      access_logs.s3.bucket={{ tpl .Values.ingress.accessLogBucket . }}
     {{- end }}
   labels:
     app: {{ .Release.Name }}
