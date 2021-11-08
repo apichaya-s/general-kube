@@ -43,7 +43,7 @@ spec:
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.container.image }}:{{ .Values.container.version }}
-          imagePullPolicy: {{ .Values.container.pullPolicy }}
+          imagePullPolicy: {{ default "IfNotPresent" .Values.container.pullPolicy }}
           ports:
             {{- range $port := .Values.container.port }}
             - name: {{ $port.name }}
