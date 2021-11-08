@@ -32,4 +32,4 @@ configmap:
 secret:
   - name: nginx-secret
     key:
-      "key": "dmFsdWUK" # echo "value" |base64
+      "key": "dmFsdWUK" # echo -n "value" |base64

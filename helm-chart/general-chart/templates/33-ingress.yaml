@@ -11,6 +11,8 @@ metadata:
     alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.scheme }}
     alb.ingress.kubernetes.io/group.name: {{ .Release.Namespace }}
     kubernetes.io/ingress.class: alb
+    # it will register pod ip to target group instead of node
+    alb.ingress.kubernetes.io/target-type: ip
     {{- if .Values.ingress.cidrs }}
     alb.ingress.kubernetes.io/inbound-cidrs: {{ (join "," .Values.ingress.cidrs ) }}
     {{- end }}
