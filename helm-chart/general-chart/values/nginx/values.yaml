@@ -1,3 +1,4 @@
+app: nginx
 service: true
 horizontalScaler:
   minReplicas: 1
@@ -7,7 +8,7 @@ horizontalScaler:
 
 container:
   image: nginx
-  version:
+  version: latest
   pullPolicy: Always
   cpuRequest: 0.2
   memRequest: 0.5Gi
@@ -25,11 +26,11 @@ container:
         scheme: HTTP
       initialDelaySeconds: 5
       timeoutSeconds: 5
-configmap:
-  - name: nginx-configmap
-    key:
-      "key": "value"
-secret:
-  - name: nginx-secret
-    key:
-      "key": "dmFsdWUK" # echo -n "value" |base64
+#configmap:
+#  - name: nginx-configmap
+#    key:
+#      "key": "value"
+#secret:
+#  - name: nginx-secret
+#    key:
+#      "key": "dmFsdWUK" # echo -n "value" |base64
